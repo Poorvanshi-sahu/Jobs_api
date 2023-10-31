@@ -28,8 +28,14 @@ app.use(cors());
 app.use(xss());
 app.use(express.json());
 
-const port = process.env.PORT || 3000;
+// swagger
+const swagger = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
 
+const port = process.env.PORT || 3000;
+app.get("/", (req, res) => res.send('<a href="/api-use">Documentation</a>'));
+app.use("/api-use", swagger.serve, swagger.setup(swaggerDocument));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/jobs", isAuthenticated, jobsRoute);
 
